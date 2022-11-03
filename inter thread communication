@@ -1,0 +1,65 @@
+import java.util.Arrays;
+
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.*;
+import java.util.stream.Collectors;
+
+
+class tast{
+	public synchronized void m1() {
+			try {
+				for(int i = 1; i <11; i++) {
+					System.out.println(i);
+					notify();
+					wait();
+				}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+	}
+	public synchronized void m2() {
+			try {
+				for(char i = 'a'; i <'k'; i++) {
+					System.out.println(i);
+					notify();
+					wait();
+				}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+	}
+}
+
+class A extends Thread{
+	
+	tast t;
+	A(tast t){
+		this.t = t;
+	}
+	
+	public void run() {
+		t.m1();
+	}
+}
+
+public class test{
+	
+	public static void main(String[] args) {
+		tast t = new tast();
+		
+		A a = new A(t);
+		a.start();
+		new Thread() {
+			public void run() {
+				t.m2();
+			}
+		}.start();
+	}
+}
+
